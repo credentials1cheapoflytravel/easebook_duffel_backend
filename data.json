@@ -1,0 +1,81 @@
+{
+  "id": "off_0000B3kw38asuipegFjt1a",
+  "total_amount": "576.49",
+  "total_currency": "USD",
+  "base_amount": "488.55",
+  "tax_amount": "87.94",
+  "total_emissions_kg": "460",
+  "owner": "Iberia",
+  "airline_logo_code": "IB",
+  "created_at": "2026-02-27T19:16:32.035229Z",
+  "conditions": {
+    "change_before_departure": {
+      "penalty_currency": null,
+      "penalty_amount": null,
+      "allowed": false
+    },
+    "change_after_departure": {},
+    "refund_before_departure": {
+      "penalty_currency": null,
+      "penalty_amount": null,
+      "allowed": false
+    },
+    "refund_after_departure": {}
+  },
+  "passengers": [
+    {
+      "type": "adult",
+      "baggage": { "cabin": [], "checked": [] },
+      "fare_brand_name": null,
+      "conditions": {}
+    }
+  ],
+  "slices": [
+    {
+      "origin": "MAD",
+      "destination": "JFK",
+      "duration": "PT8H15M",
+      "layovers": 0,
+      "segments": [
+        {
+          "origin": "MAD",
+          "destination": "JFK",
+          "duration": "PT8H15M",
+          "distance": "5760.5069993081515",
+          "aircraft": "N/A",
+          "flight_number": "3177",
+          "marketing_carrier": "Iberia",
+          "marketing_carrier_code": "IB",
+          "operating_carrier": "Iberia",
+          "operating_carrier_code": "IB",
+          "baggage": [],
+          "stops": 0,
+          "layover_duration": "PT0M"
+        }
+      ]
+    },
+    {
+      "origin": "JFK",
+      "destination": "MAD",
+      "duration": "PT8H15M",
+      "layovers": 0,
+      "segments": [
+        {
+          "origin": "JFK",
+          "destination": "MAD",
+          "duration": "PT8H15M",
+          "distance": "5760.506999308152",
+          "aircraft": "N/A",
+          "flight_number": "3177",
+          "marketing_carrier": "Iberia",
+          "marketing_carrier_code": "IB",
+          "operating_carrier": "Iberia",
+          "operating_carrier_code": "IB",
+          "baggage": [],
+          "stops": 0,
+          "layover_duration": "PT0M"
+        }
+      ]
+    }
+  ]
+}
