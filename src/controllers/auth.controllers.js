@@ -5,8 +5,8 @@ import { generateToken } from "../utils/generateToken.js";
 
 const cookieOptions = {
   httpOnly: true,
-  secure: false,
-  sameSite: "strict",
+  secure: false, // false for localhost (HTTP)
+  sameSite: "lax", // CHANGE THIS FROM "strict" TO "lax"
   maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
 };
 
@@ -52,6 +52,8 @@ export const login = async (req, res) => {
 
   const token = generateToken(user._id);
 
+  // Log to confirm cookie is being set
+  console.log("Setting cookie for user:", user.email);
   res.cookie("token", token, cookieOptions);
 
   return successResponse(res, "Login successful", {
