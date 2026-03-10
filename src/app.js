@@ -14,7 +14,11 @@ import bookingRoutes from "./routes/booking.routes.js";
 const app = express();
 
 // === Dynamic CORS Configuration ===
-const allowedOrigins = ["http://localhost:3000"];
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://air-reservation.us",
+  "https://www.air-reservation.us",
+];
 
 app.use(
   cors({
