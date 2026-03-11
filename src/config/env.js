@@ -18,6 +18,22 @@ const ENV = {
   PAYPAL_CLIENT_SECRET: process.env.PAYPAL_CLIENT_SECRET,
   PAYPAL_LIVE_CLIENT_ID: process.env.PAYPAL_LIVE_CLIENT_ID,
   PAYPAL_LIVE_CLIENT_SECRET: process.env.PAYPAL_LIVE_CLIENT_SECRET,
+
+  // Parse CLIENT_URLS from environment variable
+  CLIENT_URLS: process.env.CLIENT_URLS
+    ? process.env.CLIENT_URLS.split(",").map((url) => url.trim())
+    : [],
+
+  JWT_SECRET: process.env.JWT_SECRET,
 };
+
+// Log the configuration (without sensitive data)
+console.log("🚀 Server Configuration:", {
+  NODE_ENV: ENV.NODE_ENV,
+  CLIENT_URLS: ENV.CLIENT_URLS,
+  MONGO_URI: ENV.MONGO_URI ? "✅ Set" : "❌ Missing",
+  DUFFEL_API_KEY: ENV.DUFFEL_API_KEY ? "✅ Set" : "❌ Missing",
+  JWT_SECRET: ENV.JWT_SECRET ? "✅ Set" : "❌ Missing",
+});
 
 export default ENV;

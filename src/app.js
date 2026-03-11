@@ -13,12 +13,19 @@ import bookingRoutes from "./routes/booking.routes.js";
 
 const app = express();
 
+// Parse CLIENT_URLS from environment variable
+const clientUrls = process.env.CLIENT_URLS
+  ? process.env.CLIENT_URLS.split(",")
+  : [];
+
 // === Dynamic CORS Configuration ===
 const allowedOrigins = [
   "http://localhost:3000",
-  "https://air-reservation.us",
-  "https://www.air-reservation.us",
+  "http://localhost:3001",
+  ...clientUrls,
 ];
+
+console.log("🌐 Allowed CORS origins:", allowedOrigins);
 
 app.use(
   cors({
@@ -26,6 +33,12 @@ app.use(
       // Allow requests with no origin (e.g., mobile apps, Postman)
       if (!origin) return callback(null, true);
 
+      // Allow all origins in development
+      if (process.env.NODE_ENV !== "production") {
+        return callback(null, true);
+      }
+
+      // Check if origin is allowed
       if (allowedOrigins.includes(origin)) {
         return callback(null, true);
       } else {
@@ -34,9 +47,9 @@ app.use(
       }
     },
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
+    optionsSuccessStatus: 200,
   }),
 );
 
