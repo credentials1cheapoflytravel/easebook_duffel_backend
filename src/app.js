@@ -1,7 +1,6 @@
 import express from "express";
 import cors from "cors";
 import morgan from "morgan";
-import cookieParser from "cookie-parser";
 
 import ENV from "./config/env.js";
 import { errorHandler } from "./middlewares/errorMiddlewares.js";
@@ -13,10 +12,10 @@ import bookingRoutes from "./routes/booking.routes.js";
 
 const app = express();
 
-// ✅ IMPORTANT: Trust proxy for rate limiting (required for Railway/Cloud deployments)
+// Trust proxy for rate limiting
 app.set("trust proxy", 1);
 
-// ✅ Health check endpoint - MUST be before CORS and other middleware
+// Health check endpoint
 app.get("/health", (req, res) => {
   res.status(200).json({
     status: "healthy",
@@ -29,7 +28,7 @@ app.get("/health", (req, res) => {
 // Parse CLIENT_URLS from environment variable
 const clientUrls = ENV.CLIENT_URLS || [];
 
-// === Dynamic CORS Configuration ===
+// === CORS Configuration  ===
 const allowedOrigins = [
   "http://localhost:3000",
   "http://localhost:3001",
@@ -40,18 +39,13 @@ const allowedOrigins = [
 
 console.log("🌐 Allowed CORS origins:", allowedOrigins);
 
-// CORS configuration
+// ✅ Simplified CORS - no credentials needed since we're not using cookies
 const corsOptions = {
   origin: function (origin, callback) {
-    // Allow requests with no origin (e.g., mobile apps, Postman)
     if (!origin) return callback(null, true);
-
-    // In development, allow all origins
     if (ENV.NODE_ENV !== "production") {
       return callback(null, true);
     }
-
-    // Check if origin is allowed
     if (allowedOrigins.includes(origin)) {
       return callback(null, true);
     } else {
@@ -61,29 +55,26 @@ const corsOptions = {
   },
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true,
-  optionsSuccessStatus: 200,
 };
 
 app.use(cors(corsOptions));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
 
-// === Logger (only for dev)
+// Logger (only for dev)
 if (ENV.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
-// === API Routes ===
+// API Routes
 app.get("/", (req, res) => res.send("🚀 API is running..."));
 app.use("/api/airports", airportRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/flights", flightRoutes);
 app.use("/api/bookings", bookingRoutes);
 
-// === Error Handlers ===
+// Error Handlers
 app.use(notFound);
 app.use(errorHandler);
 

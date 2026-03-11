@@ -1,42 +1,7 @@
 import User from "../models/user.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { successResponse } from "../utils/ApiResponse.js";
-import { generateToken } from "../utils/generateToken.js";
-import ENV from "../config/env.js";
-
-// Dynamic cookie options based on request origin
-const getCookieOptions = (req) => {
-  const isProduction = ENV.NODE_ENV === "production";
-  const origin = req.get("origin") || "";
-
-  // Extract domain from origin for cookie domain setting
-  let domain;
-  if (isProduction && origin) {
-    try {
-      const url = new URL(origin);
-      // For subdomains, use the parent domain
-      const hostParts = url.hostname.split(".");
-      if (hostParts.length > 2) {
-        // Handle subdomains like www.air-reservation.us
-        domain = "." + hostParts.slice(-2).join("."); // .air-reservation.us
-      } else {
-        domain = "." + url.hostname; // .air-reservation.us
-      }
-      console.log(`🍪 Setting cookie domain: ${domain} for origin: ${origin}`);
-    } catch (e) {
-      console.error("Error parsing origin for cookie domain:", e);
-      domain = undefined;
-    }
-  }
-
-  return {
-    httpOnly: true,
-    secure: isProduction,
-    sameSite: isProduction ? "none" : "lax",
-    maxAge: 7 * 24 * 60 * 60 * 1000,
-    domain: domain,
-  };
-};
+import { generateToken } from "../utils/generateToken.js"; // ✅ Now properly imported
 
 // REGISTER
 export const register = async (req, res) => {
@@ -55,13 +20,12 @@ export const register = async (req, res) => {
 
   const token = generateToken(user._id);
 
-  // Use dynamic cookie options
-  res.cookie("token", token, getCookieOptions(req));
-
+  // Send token in response body
   return successResponse(res, "User registered successfully", {
     id: user._id,
     name: user.name,
     email: user.email,
+    token: token,
   });
 };
 
@@ -81,24 +45,19 @@ export const login = async (req, res) => {
 
   const token = generateToken(user._id);
 
-  // Log for debugging
-  console.log("Setting cookie for user:", user.email);
-  console.log("Origin:", req.get("origin"));
-  console.log("Cookie options:", getCookieOptions(req));
+  console.log("🔐 User logged in:", user.email);
 
-  // Use dynamic cookie options
-  res.cookie("token", token, getCookieOptions(req));
-
+  // Send token in response body
   return successResponse(res, "Login successful", {
     id: user._id,
     name: user.name,
     email: user.email,
+    token: token,
   });
 };
 
 // LOGOUT
 export const logout = async (req, res) => {
-  res.clearCookie("token", getCookieOptions(req));
   return successResponse(res, "Logged out successfully");
 };
 
